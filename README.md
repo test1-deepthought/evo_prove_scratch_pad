@@ -13,7 +13,12 @@ that can be imported by future proofs.
 
 ## Structure
 
-
+```
+Proofs/
+  <theorem>.lean          # Main proof file
+lakefile.lean             # Lake project configuration
+lean-toolchain            # Lean version pin
+```
 
 ## How EVO Uses This Repo
 
@@ -27,14 +32,17 @@ that can be imported by future proofs.
 
 ### Branch convention
 
+```
 evo/prove-<theorem-slug>-<YYYYMMDD-HHMMSS>
+```
 
 Example: evo/prove-sqrt-two-irrational-20260608-143022
 
 ## lake build CI
 
 The lake-build.yml workflow is triggered via workflow_dispatch.
-It checks out the branch, runs lake build, and reports pass/fail.
+It installs elan, runs lake update, downloads the mathlib cache,
+and runs lake build.  Pass/fail is reported as the CI conclusion.
 
 ## Theorem Library
 
