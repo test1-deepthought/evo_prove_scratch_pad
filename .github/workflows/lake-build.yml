@@ -26,13 +26,7 @@ jobs:
           docker-images: true
           swap-storage: false
 
-      - name: Install elan
-        run: |
-          curl -sSfL https://github.com/leanprover/elan/releases/download/v4.0.3/elan-x86_64-unknown-linux-gnu.tar.gz | tar xz
-          ./elan-init -y --no-modify-path
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Setup Lean toolchain and Mathlib cache
+      - name: Install Lean toolchain and Mathlib cache
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
         with:
           use-mathlib-cache: true
