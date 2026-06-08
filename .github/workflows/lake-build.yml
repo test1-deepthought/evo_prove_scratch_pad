@@ -11,10 +11,28 @@ jobs:
         with:
           ref: ${{ github.event.ref || github.ref }}
 
-      - name: Install Lean toolchain and Mathlib cache
-        uses: leanprover/lean-action@v1
+      - name: Install elan (with retry)
+        run: |
+          for i in 1 2 3 4 5; do
+            echo "Attempt $i..."
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y && break
+            echo "Failed, retrying in 10s..."
+            sleep 10
+          done
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache mathlib
+        uses: actions/cache@v4
         with:
-          use-mathlib-cache: true
+          path: .lake
+          key: mathlib-${{ hashFiles('lake-manifest.json') }}
+          restore-keys: mathlib-
+
+      - name: Lake update
+        run: lake update || lake update || lake update
+
+      - name: Lake exe cache get
+        run: lake exe cache get || true
 
       - name: Lake build
-        run: lake build Proofs
+        run: lake build
