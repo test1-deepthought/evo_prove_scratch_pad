@@ -3,36 +3,33 @@ name: Lake Build
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.ref || github.ref }}
 
-      - name: Install elan (with retry)
-        run: |
-          for i in 1 2 3 4 5; do
-            echo "Attempt $i..."
-            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y && break
-            echo "Failed, retrying in 10s..."
-            sleep 10
-          done
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Cache mathlib
-        uses: actions/cache@v4
+      - name: Free disk space for Mathlib cache
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be
         with:
-          path: .lake
-          key: mathlib-${{ hashFiles('lake-manifest.json') }}
-          restore-keys: mathlib-
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: true
+          swap-storage: false
 
-      - name: Lake update
-        run: lake update || lake update || lake update
-
-      - name: Lake exe cache get
-        run: lake exe cache get || true
+      - name: Install Lean toolchain and Mathlib cache
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          use-mathlib-cache: true
 
       - name: Lake build
-        run: lake build
+        run: lake build Proofs
