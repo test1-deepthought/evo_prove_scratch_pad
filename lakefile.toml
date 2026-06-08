@@ -1,9 +1,5 @@
 name = "evo_prove"
-testDriver = "workspace_test"
 defaultTargets = ["Proofs"]
-
-[leanOptions]
-autoImplicit = false
 
 [[require]]
 name = "mathlib"
@@ -12,7 +8,3 @@ rev = "5450b53e5ddc"
 
 [[lean_lib]]
 name = "Proofs"
-
-[[lean_exe]]
-name = "workspace_test"
-root = "WorkspaceTest"
