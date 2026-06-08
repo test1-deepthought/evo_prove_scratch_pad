@@ -31,5 +31,26 @@ jobs:
         with:
           use-mathlib-cache: true
 
+      - name: Show proof files
+        run: |
+          echo "Proof import index:"
+          cat Proofs.lean
+          echo
+          echo "Proof files:"
+          find Proofs -maxdepth 2 -type f -name '*.lean' -print | sort
+          {
+            echo "## Proof files compiled"
+            echo
+            echo "### Proof import index"
+            echo '```lean'
+            cat Proofs.lean
+            echo '```'
+            echo
+            echo "### Proof files"
+            echo '```text'
+            find Proofs -maxdepth 2 -type f -name '*.lean' -print | sort
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Lake build
         run: lake build Proofs
