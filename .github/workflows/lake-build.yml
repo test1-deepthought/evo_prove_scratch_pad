@@ -31,8 +31,5 @@ jobs:
         with:
           use-mathlib-cache: true
 
-      - name: Lake update
-        run: lake update
-
-      - name: Lake build
+      - name: Lake build (auto-runs lake update if needed)
         run: lake build Proofs
