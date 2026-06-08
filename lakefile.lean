@@ -1,12 +1,10 @@
 import Lake
 open Lake DSL
 
-package "evo_prove" where
-  moreServerArgs := #["-Dpp.unicode=true"]
+package evo_prove
 
-require mathlib from
+require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git"
 
 @[default_target]
-lean_lib "Proofs" where
-  globs := #[.submodules `Proofs]
+lean_lib Proofs
