@@ -11,3 +11,7 @@ theorem eq_symm_test {α : Type} {a b : α} (h : a = b) : b = a := by
 /-- Test: 0 < 1 -/
 theorem zero_lt_one : (0 : ℕ) < 1 := by
   norm_num
+
+/-- Extra theorem: 2 + 2 = 4 -/
+theorem two_plus_two_eq_four : (2 : ℕ) + 2 = 4 := by
+  norm_num
