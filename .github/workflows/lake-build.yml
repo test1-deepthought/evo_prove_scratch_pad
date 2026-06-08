@@ -6,12 +6,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: leanprover/lean4:latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.ref || github.ref }}
+
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain leanprover/lean4:stable
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Cache mathlib
         uses: actions/cache@v4
