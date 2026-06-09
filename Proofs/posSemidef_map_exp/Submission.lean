@@ -80,13 +80,13 @@ lemma expPartialSum_posSemidef {n : Type*} [Fintype n] [DecidableEq n]
     exact hsum.add hterm
 
 lemma tendsto_exp_series (x : ℝ) : Tendsto (λ N : ℕ => ∑ k ∈ Finset.range (N+1), x ^ k / (Nat.factorial k : ℝ)) 
-    atTop (ᵉᵃ (Real.exp x)) := by
+    atTop (𝓝 (Real.exp x)) := by
   have hsum : HasSum (λ n : ℕ => x ^ n / (Nat.factorial n : ℝ)) (Real.exp x) := by
     have hsum' := (Real.summable_pow_div_factorial x).hasSum
     have h_eq : (∑' n : ℕ, x ^ n / (Nat.factorial n : ℝ)) = Real.exp x := by
-      rw [Real.exp_eq_exp_ℝ, NormedSpace.exp_eq_tsum_div (ᵔa := ℝ)]
+      rw [Real.exp_eq_exp_ℝ, NormedSpace.exp_eq_tsum_div (𝕂 := ℝ)]
     simpa [h_eq] using hsum'
-  have h_tendsto_range : Tendsto (λ N : ℕ => ∑ k ∈ Finset.range N, x ^ k / (Nat.factorial k : ℝ)) atTop (ᵉᵃ (Real.exp x)) :=
+  have h_tendsto_range : Tendsto (λ N : ℕ => ∑ k ∈ Finset.range N, x ^ k / (Nat.factorial k : ℝ)) atTop (𝓝 (Real.exp x)) :=
     hsum.tendsto_sum_nat
   refine h_tendsto_range.comp ?_
   apply tendsto_atTop_atTop.mpr
@@ -97,11 +97,11 @@ lemma tendsto_exp_series (x : ℝ) : Tendsto (λ N : ℕ => ∑ k ∈ Finset.ran
 lemma posSemidef_of_entrywise_limit {n : Type*} [Fintype n] [DecidableEq n]
     {M : Matrix n n ℝ} {S : ℕ → Matrix n n ℝ}
     (hS_PSD : ∀ N, (S N).PosSemidef)
-    (hlim : ∀ i j, Tendsto (λ N => (S N) i j) atTop (ᵉᵃ (M i j))) : M.PosSemidef := by
+    (hlim : ∀ i j, Tendsto (λ N => (S N) i j) atTop (𝓝 (M i j))) : M.PosSemidef := by
   have hM_herm : M.IsHermitian := by
     ext i j
-    have h1 : Tendsto (λ N => (S N) i j) atTop (ᵉᵃ (M i j)) := hlim i j
-    have h2 : Tendsto (λ N => (S N) j i) atTop (ᵉᵃ (M j i)) := hlim j i
+    have h1 : Tendsto (λ N => (S N) i j) atTop (𝓝 (M i j)) := hlim i j
+    have h2 : Tendsto (λ N => (S N) j i) atTop (𝓝 (M j i)) := hlim j i
     have heq : ∀ N, (S N) i j = (S N) j i := by
       intro N
       have hS_herm : (S N).IsHermitian := (hS_PSD N).1
@@ -127,13 +127,13 @@ lemma posSemidef_of_entrywise_limit {n : Type*} [Fintype n] [DecidableEq n]
     have hpos := hPSD.2 x
     simpa [star] using hpos
   have h_sum_lim : Tendsto (λ N => ∑ i ∈ s, ∑ j ∈ s, x i * (S N) i j * x j) atTop 
-      (ᵉᵃ (∑ i ∈ s, ∑ j ∈ s, x i * M i j * x j)) := by
+      (𝓝 (∑ i ∈ s, ∑ j ∈ s, x i * M i j * x j)) := by
     apply tendsto_finset_sum s
     intro i hi
     apply tendsto_finset_sum s
     intro j hj
-    have hconv : Tendsto (λ N => (S N) i j) atTop (ᵉᵃ (M i j)) := hlim i j
-    have h_const_mul : Tendsto (λ N : ℕ => x i * (S N) i j * x j) atTop (ᵉᵃ (x i * M i j * x j)) := by
+    have hconv : Tendsto (λ N => (S N) i j) atTop (𝓝 (M i j)) := hlim i j
+    have h_const_mul : Tendsto (λ N : ℕ => x i * (S N) i j * x j) atTop (𝓝 (x i * M i j * x j)) := by
       refine ((tendsto_const_nhds : Tendsto (λ _ : ℕ => x i) atTop _).mul hconv).mul ?_
       exact tendsto_const_nhds
     simpa [mul_assoc] using h_const_mul
@@ -150,7 +150,7 @@ theorem posSemidef_map_exp {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.PosSemidef) : (A.map Real.exp).PosSemidef := by
   let S := λ N => expPartialSum A N
   have hS_PSD : ∀ N, (S N).PosSemidef := expPartialSum_posSemidef hA
-  have hlim : ∀ i j, Tendsto (λ N => (S N) i j) atTop (ᵉᵃ ((A.map Real.exp) i j)) := by
+  have hlim : ∀ i j, Tendsto (λ N => (S N) i j) atTop (𝓝 ((A.map Real.exp) i j)) := by
     intro i j
     have h_entry : (A.map Real.exp) i j = Real.exp (A i j) := by simp
     rw [h_entry]
