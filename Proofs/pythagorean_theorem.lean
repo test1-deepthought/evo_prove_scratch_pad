@@ -1,5 +1,6 @@
 import Mathlib
 open EuclideanGeometry
+open Real
 
 /-!
 # The Pythagorean Theorem
@@ -17,8 +18,6 @@ Two proofs are provided:
 
 2. **Law of cosines**: Applies the law of cosines and the fact that cos(π/2) = 0.
 -/
-
-open Real
 
 /-!
 ### Theorem (Pythagoras)
