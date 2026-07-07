@@ -32,8 +32,6 @@ def exactlyKSunny (k : ℕ) (lines : List (Set (ℚ × ℚ))) : Prop :=
   (List.filter isSunny lines).length = k
 
 /-!
-# Fixed Lemmas for Sunny Lines (IMO 2025 P1)
-
 ## Fix 1: `antiDiagonal_coverage`
 **Problem:** `omega` was being used for the algebraic deduction, but `omega` can clear parameters.
 **Fix:** Use `linarith` instead of `omega`.
