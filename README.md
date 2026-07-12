@@ -1,57 +1,44 @@
-# evo_prove_scratch_pad
+# sturm_lemmas
 
-**EVO PROVE Tier persistent workspace.** This repository is the scratch pad for
-[EVO](https://github.com/machinelearning2014/artificial_mind)
-(Explicit-assumption Verification Orchestrator) PROVE-tier tasks.
+**Branch:** `evo/prove-sturm-lemmas-20260712-070948`
+**Lake build:** :hourglass: not_run
 
-## Purpose
+---
 
-When EVO executes a PROVE-tier workflow (P1 setup -> P2 explore -> P3 build+verify
--> P4 validate -> P5 answer), this repo stores Lean 4 proof artifacts with
-lake build verification.  Every theorem is a permanent, auditable proof artifact
-that can be imported by future proofs.
+# Sturm's Theorem — Partial Formalization
 
-## Structure
+## Problem
+Prove Sturm's theorem: For a squarefree real polynomial p and interval (a,b) with p(a)≠0, p(b)≠0, the number of distinct real roots of p in (a,b) equals σ(a) - σ(b).
 
-```
-Proofs/
-  <theorem>.lean          # Main proof file
-lakefile.lean             # Lake project configuration
-lean-toolchain            # Lean version pin
-```
+## Status: INCOMPLETE — Partial progress
 
-## How EVO Uses This Repo
+## Verified Lemmas (7/7)
+1. `signChanges_empty`: signChanges [] = 0
+2. `signChanges_singleton`: signChanges [x] = 0 for x ≠ 0
+3. `signChanges_two_opposite`: signChanges [x,y] = 1 when x*y < 0
+4. `signChanges_cons_zero`: signChanges (0 :: xs) = signChanges xs
+5. `sturmAux_ne_nil`: sturmAux a b n ≠ []
+6. `sturmChain_ne_nil`: sturmChain p ≠ []
+7. `squarefree_imp_separable`: Squarefree p → Separable p over ℝ
 
-### Workflow
+## Next Steps
+To complete the proof:
 
-1. **P1 Setup:** EVO declares problem_spec and proof_strategy in Prolog
-2. **P2 Explore:** EVO explores patterns via python_exec
-3. **P3 Build:** EVO writes .lean files to a feature branch (evo/prove-<slug>-<timestamp>)
-4. **P4 Verify:** EVO runs lake build (locally or via CI workflow dispatch)
-5. **P5 Answer:** EVO creates a PR with the verified theorem
+1. **sigma_locally_constant**: Prove sigma is constant on intervals where no chain entry vanishes. Use `IntermediateValueTheorem` and the fact that each entry's eval is continuous.
 
-### Branch convention
+2. **sigma_drop_at_root**: At a simple root r of p (p'(r)≠0), sigma drops by exactly 1. Show p changes sign while p' does not.
 
-```
-evo/prove-<theorem-slug>-<YYYYMMDD-HHMMSS>
-```
+3. **sigma_no_change_at_interior_root**: At roots of interior chain entries (k≥2), sigma is unchanged due to the Sturm recurrence.
 
-Example: evo/prove-sqrt-two-irrational-20260608-143022
+4. **count_roots_eq_sigma_diff**: Sum over all roots in (a,b) using induction.
 
-## lake build CI
+## Key Mathlib References
+- `PerfectField.separable_iff_squarefree` (ℝ is perfect)
+- `Polynomial.nodup_roots` (distinct roots for separable polynomials)
+- `Polynomial.rootMultiplicity_le_one_of_separable`
+- `Polynomial.eval`, `Polynomial.derivative`
+- `IntermediateValueTheorem`
 
-The lake-build.yml workflow is triggered via workflow_dispatch.
-It installs elan, runs lake update, downloads the mathlib cache,
-and runs lake build.  Pass/fail is reported as the CI conclusion.
-
-## Theorem Library
-
-Over time, this repo accumulates a library of verified theorems.
-Each is an importable Lean module that future proofs can depend on.
-This turns one-shot verification into a growing proof asset.
-
-## Security
-
-- EVO writes are scoped to branches prefixed with evo/
-- Main branch protection prevents direct pushes
-- All proofs go through PR review with lake build verification
+## Lean-Eval Problem
+The problem is registered as `sturm` in the Lean-Eval benchmark suite.
+The saved partial attempt is at `failed_submissions/sturm/`.
