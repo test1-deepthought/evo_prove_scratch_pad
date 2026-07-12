@@ -1,18 +1,10 @@
 name = "evo_prove"
-testDriver = "workspace_test"
 defaultTargets = ["Proofs"]
-
-[leanOptions]
-autoImplicit = false
 
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-rev = "5450b53e5ddc"
+rev = "5450b53e5ddc46c7c02bc41e27ee26c3685e87b9"
 
 [[lean_lib]]
 name = "Proofs"
-
-[[lean_exe]]
-name = "workspace_test"
-root = "WorkspaceTest"
