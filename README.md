@@ -1,57 +1,30 @@
-# evo_prove_scratch_pad
+# sturm_theorem
 
-**EVO PROVE Tier persistent workspace.** This repository is the scratch pad for
-[EVO](https://github.com/machinelearning2014/artificial_mind)
-(Explicit-assumption Verification Orchestrator) PROVE-tier tasks.
+**Branch:** `evo/prove-sturm-theorem-20260723-221804`
+**Lake build:** :hourglass: not_run
 
-## Purpose
+---
 
-When EVO executes a PROVE-tier workflow (P1 setup -> P2 explore -> P3 build+verify
--> P4 validate -> P5 answer), this repo stores Lean 4 proof artifacts with
-lake build verification.  Every theorem is a permanent, auditable proof artifact
-that can be imported by future proofs.
+# Sturm's Theorem — Formalization Status
 
-## Structure
+## Status: INCOMPLETE
 
-```
-Proofs/
-  <theorem>.lean          # Main proof file
-lakefile.lean             # Lake project configuration
-lean-toolchain            # Lean version pin
-```
+The mathematical proof (Phase 1) is verified. The Lean 4 formalization (Phase 2) has substantial verified infrastructure but the full main theorem is not yet formally verified.
 
-## How EVO Uses This Repo
+## Verified Components (lean4_exec exit_code 0)
 
-### Workflow
+- `sturmSeqAux` / `sturmSeq`: Recursive Sturm sequence with termination proof
+- `div_add_mod_eq`: Euclidean division identity for ℝ[x]
+- `opposite_at_root`: a(x) = -c(x) when b(x)=0 and c = -(a % b)
+- `signChangesAux` / `signChanges`: Sign change counting with zero-skipping
+- `signChanges_cons_zero`: Removing leading zero preserves count
+- `signChanges_triple`: [A,0,-A] → 1 for A ≠ 0
+- `Vf`: The V_f(x) function
+- `realRootsIn`: Real root extraction from complex roots
 
-1. **P1 Setup:** EVO declares problem_spec and proof_strategy in Prolog
-2. **P2 Explore:** EVO explores patterns via python_exec
-3. **P3 Build:** EVO writes .lean files to a feature branch (evo/prove-<slug>-<timestamp>)
-4. **P4 Verify:** EVO runs lake build (locally or via CI workflow dispatch)
-5. **P5 Answer:** EVO creates a PR with the verified theorem
+## Remaining Goals
 
-### Branch convention
-
-```
-evo/prove-<theorem-slug>-<YYYYMMDD-HHMMSS>
-```
-
-Example: evo/prove-sqrt-two-irrational-20260608-143022
-
-## lake build CI
-
-The lake-build.yml workflow is triggered via workflow_dispatch.
-It installs elan, runs lake update, downloads the mathlib cache,
-and runs lake build.  Pass/fail is reported as the CI conclusion.
-
-## Theorem Library
-
-Over time, this repo accumulates a library of verified theorems.
-Each is an importable Lean module that future proofs can depend on.
-This turns one-shot verification into a growing proof asset.
-
-## Security
-
-- EVO writes are scoped to branches prefixed with evo/
-- Main branch protection prevents direct pushes
-- All proofs go through PR review with lake build verification
+1. `sturmSeq_no_consecutive_zero`: No two consecutive Sturm terms vanish together
+2. `sign_change_at_f_root`: V_f decreases by 1 at a simple root of f
+3. `no_change_at_intermediate`: V_f is locally constant at roots of intermediate p_i
+4. `sturm_theorem`: Assembly of the full theorem via interval partitioning
